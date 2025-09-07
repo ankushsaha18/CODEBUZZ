@@ -7,7 +7,7 @@ sqlparse==0.5.3
 django-cors-headers==3.14.0
 
 # Static file serving
-whitenoise==2.0.6
+whitenoise==6.7.0
 
 # HTTP requests and API calls
 requests==2.32.5
