@@ -88,16 +88,18 @@ class GlobalCameraManager {
             // Provide more specific error messages
             let errorMessage = 'Failed to access camera. ';
             
-            if (error.name === 'NotAllowedError') {
+            if (error.name === 'NotAllowedError' || (error.message && error.message.includes('denied'))) {
                 errorMessage += 'Please allow camera access in your browser settings and refresh the page.';
-            } else if (error.name === 'NotFoundError') {
+            } else if (error.name === 'NotFoundError' || (error.message && error.message.includes('found'))) {
                 errorMessage += 'No camera detected. Please connect a camera and try again.';
-            } else if (error.name === 'NotReadableError') {
+            } else if (error.name === 'NotReadableError' || (error.message && error.message.includes('use'))) {
                 errorMessage += 'Camera is already in use by another application.';
-            } else if (error.message.includes('not supported')) {
+            } else if (error.message && error.message.includes('not supported')) {
                 errorMessage += 'Your browser does not support camera access. Please use Chrome, Firefox, or Edge.';
+            } else if (error.message) {
+                errorMessage += error.message;
             } else {
-                errorMessage += error.message || 'Unknown error occurred.';
+                errorMessage += 'Unknown error occurred.';
             }
             
             // Show error to user
@@ -176,16 +178,8 @@ class GlobalCameraManager {
         video.autoplay = true;
         video.playsInline = true;
         video.muted = true;
-        video.style.cssText = `
-            position: fixed !important;
-            top: -9999px !important;
-            left: -9999px !important;
-            width: 1px !important;
-            height: 1px !important;
-            z-index: -9999 !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        `;
+        // Fixed CSS with proper negative values
+        video.style.cssText = 'position: fixed !important; top: -9999px !important; left: -9999px !important; width: 1px !important; height: 1px !important; z-index: -9999 !important; opacity: 0 !important; pointer-events: none !important;';
         video.setAttribute('data-global-camera', 'true');
         video.setAttribute('data-proctoring-active', 'true');
         

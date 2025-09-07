@@ -136,6 +136,31 @@ If you're experiencing issues with the camera proctoring system, please refer to
 
 - [Proctoring Troubleshooting Guide](PROCTORING_TROUBLESHOOTING.md) - Comprehensive guide for diagnosing and resolving proctoring issues
 
+### Quick Test Script
+
+You can verify that the computer vision libraries are properly installed by running:
+
+```bash
+python test_cv.py
+```
+
+Expected output:
+```
+Testing computer vision library imports...
+==================================================
+NumPy version: 1.26.4
+NumPy import successful
+OpenCV version: 4.11.0
+OpenCV import successful
+MediaPipe version: 0.10.21
+MediaPipe import successful
+==================================================
+All tests completed!
+Computer vision libraries are ready.
+```
+
+If any libraries fail to import, the proctoring system will automatically disable itself and allow access to contests without camera monitoring.
+
 Common issues and solutions:
 1. **Camera Access Denied** - Check browser permissions and ensure no other applications are using the camera
 2. **Proctoring Not Starting** - Verify contest settings and check browser console for errors

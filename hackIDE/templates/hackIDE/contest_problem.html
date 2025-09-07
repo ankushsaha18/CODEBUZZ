@@ -369,14 +369,14 @@ let proctoringInitialized = false;
 function initializeProctoring() {
     if (proctoringInitialized) {
         console.log('Proctoring already initialized');
-        return;
+        return Promise.resolve(true);
     }
     
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
     if (!csrfToken) {
         console.error('CSRF token not found');
         showErrorMessage('Security token missing. Please refresh the page.');
-        return;
+        return Promise.resolve(false);
     }
     
     console.log('Creating RealtimeProctoring instance...');
@@ -385,7 +385,7 @@ function initializeProctoring() {
     } catch (error) {
         console.error('Failed to create RealtimeProctoring instance:', error);
         showErrorMessage('Failed to initialize proctoring system. Please check browser compatibility.');
-        return;
+        return Promise.resolve(false);
     }
     
     // Set up event handlers
@@ -413,9 +413,9 @@ function initializeProctoring() {
         }
     });
     
-    // Start proctoring
+    // Start proctoring and return promise
     console.log('Starting proctoring...');
-    proctoring.start().then(success => {
+    return proctoring.start().then(success => {
         if (success !== false) {
             console.log('Proctoring started successfully');
             // Hide manual start button if proctoring starts successfully
@@ -423,6 +423,8 @@ function initializeProctoring() {
             if (manualBtn) {
                 manualBtn.style.display = 'none';
             }
+            proctoringInitialized = true;
+            return true;
         } else {
             console.log('Automatic proctoring start failed, showing manual start button');
             // Show manual start button if automatic start fails
@@ -431,9 +433,16 @@ function initializeProctoring() {
                 manualBtn.style.display = 'inline-block';
                 manualBtn.onclick = function() {
                     console.log('Manual proctoring start requested');
-                    proctoring.start();
+                    return proctoring.start().then(result => {
+                        if (result) {
+                            manualBtn.style.display = 'none';
+                            proctoringInitialized = true;
+                        }
+                        return result;
+                    });
                 };
             }
+            return false;
         }
     }).catch(error => {
         console.error('Failed to start proctoring:', error);
@@ -444,12 +453,17 @@ function initializeProctoring() {
             manualBtn.style.display = 'inline-block';
             manualBtn.onclick = function() {
                 console.log('Manual proctoring start requested');
-                proctoring.start();
+                return proctoring.start().then(result => {
+                    if (result) {
+                        manualBtn.style.display = 'none';
+                        proctoringInitialized = true;
+                    }
+                    return result;
+                });
             };
         }
+        return false;
     });
-    
-    proctoringInitialized = true;
 }
 
 // Helper function to show error messages

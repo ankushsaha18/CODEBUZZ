@@ -81,49 +81,11 @@ class RealtimeProctoring {
                 <span id="proctoring-text">Proctoring: Inactive</span>
             </div>
         `;
-        indicator.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        `;
+        // Fixed CSS with proper values
+        indicator.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000; background: rgba(0, 0, 0, 0.8); color: white; padding: 10px 15px; border-radius: 20px; font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;';
         
         const style = document.createElement('style');
-        style.textContent = `
-            .proctoring-indicator {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-            .indicator-dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: #dc3545;
-                animation: pulse 2s infinite;
-            }
-            .indicator-dot.active {
-                background: #28a745;
-            }
-            .indicator-dot.warning {
-                background: #ffc107;
-            }
-            .indicator-dot.terminated {
-                background: #dc3545;
-                animation: none;
-            }
-            @keyframes pulse {
-                0% { opacity: 1; }
-                50% { opacity: 0.5; }
-                100% { opacity: 1; }
-            }
-        `;
+        style.textContent = '.proctoring-indicator { display: flex; align-items: center; } .proctoring-indicator > * { margin-right: 8px; } .proctoring-indicator > *:last-child { margin-right: 0; } .indicator-dot { width: 8px; height: 8px; border-radius: 50%; background: #dc3545; animation: pulse 2s infinite; } .indicator-dot.active { background: #28a745; } .indicator-dot.warning { background: #ffc107; } .indicator-dot.terminated { background: #dc3545; animation: none; } @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }';
         document.head.appendChild(style);
         document.body.appendChild(indicator);
         
@@ -215,7 +177,7 @@ class RealtimeProctoring {
                 max-height: 200px;
                 overflow-y: auto;
             ">
-                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <strong>🔧 Proctoring Debug</strong>
                     <button onclick="this.parentElement.parentElement.parentElement.style.display='none'" 
                             style="background: none; border: none; color: white; cursor: pointer; margin-left: 10px;">✕</button>
@@ -495,18 +457,21 @@ class RealtimeProctoring {
             
             let errorMessage = 'Failed to start camera proctoring. ';
             
-            if (error.name === 'NotAllowedError') {
+            // Enhanced error handling with more specific messages
+            if (error.name === 'NotAllowedError' || (error.message && error.message.includes('denied'))) {
                 errorMessage += 'Camera access was denied. Please allow camera access and refresh the page.';
-            } else if (error.name === 'NotFoundError') {
+            } else if (error.name === 'NotFoundError' || (error.message && error.message.includes('found'))) {
                 errorMessage += 'No camera found. Please connect a camera and refresh the page.';
-            } else if (error.name === 'NotReadableError') {
+            } else if (error.name === 'NotReadableError' || (error.message && error.message.includes('use'))) {
                 errorMessage += 'Camera is already in use by another application.';
-            } else if (error.message.includes('not supported')) {
+            } else if (error.message && error.message.includes('not supported')) {
                 errorMessage += 'Your browser does not support camera access. Please use Chrome, Firefox, or Edge.';
-            } else if (error.message.includes('timeout')) {
+            } else if (error.message && error.message.includes('timeout')) {
                 errorMessage += 'Camera initialization timed out. Please check camera permissions and try again.';
+            } else if (error.message) {
+                errorMessage += error.message;
             } else {
-                errorMessage += error.message || 'Unknown error occurred.';
+                errorMessage += 'Unknown error occurred. Please check browser compatibility and camera permissions.';
             }
             
             this.showTemporaryMessage(errorMessage, 'error');
