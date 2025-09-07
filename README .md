@@ -35,6 +35,19 @@ With CodeBuzz, we bridge the gap between **learning, assessment, and employabili
 
 ---
 
+## 📸 Screenshots
+
+<img width="1470" height="840" alt="Screenshot 2025-09-07 at 3 08 09 PM" src="https://github.com/user-attachments/assets/de23d006-48b9-49a4-bb35-1ec7f7357ff0" />
+<img width="1470" height="840" alt="Screenshot 2025-09-07 at 3 07 58 PM" src="https://github.com/user-attachments/assets/85648e4a-e695-4425-9a0e-6a3d9850883a" />
+<img width="1470" height="749" alt="Screenshot 2025-09-07 at 3 07 13 PM" src="https://github.com/user-attachments/assets/8191f981-08c3-4916-9a52-5a9fc11ee015" />
+<img width="1470" height="841" alt="Screenshot 2025-09-07 at 3 06 49 PM" src="https://github.com/user-attachments/assets/cbea3e3f-0a06-4b2c-b460-af6c3bc140c1" />
+<img width="1470" height="838" alt="Screenshot 2025-09-07 at 3 06 33 PM" src="https://github.com/user-attachments/assets/067b11dd-d3cb-42a8-b530-1268723e73ad" />
+<img width="1470" height="836" alt="Screenshot 2025-09-07 at 3 06 21 PM" src="https://github.com/user-attachments/assets/0a83c1d7-e5b3-45b2-9d0d-a8cbd982baa7" />
+<img width="1470" height="837" alt="Screenshot 2025-09-07 at 3 06 08 PM" src="https://github.com/user-attachments/assets/7aff9aaf-43b9-4445-9942-2fa89091870e" />
+
+
+---
+
 ## 🚀 Features  
 - ✅ Online coding environment with syntax highlighting  
 - ✅ Fair contests with real-time anti-cheating proctoring  
