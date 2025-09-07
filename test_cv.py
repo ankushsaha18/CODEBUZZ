@@ -11,6 +11,7 @@ def test_opencv():
         return True
     except ImportError as e:
         print(f"OpenCV import failed: {e}")
+        print("OpenCV is optional and only needed for proctoring functionality")
         return False
 
 def test_mediapipe():
@@ -21,6 +22,7 @@ def test_mediapipe():
         return True
     except ImportError as e:
         print(f"MediaPipe import failed: {e}")
+        print("MediaPipe is optional and only needed for proctoring functionality")
         return False
 
 def test_numpy():
@@ -39,11 +41,14 @@ if __name__ == "__main__":
     
     success = True
     success &= test_numpy()
-    success &= test_opencv()
-    success &= test_mediapipe()
+    opencv_available = test_opencv()
+    mediapipe_available = test_mediapipe()
     
     print("=" * 50)
-    if success:
+    if success and (opencv_available and mediapipe_available):
         print("All tests passed! Computer vision libraries are ready.")
+    elif success:
+        print("Core libraries are ready. Computer vision libraries are optional.")
+        print("Proctoring functionality will be disabled if computer vision libraries are not available.")
     else:
         print("Some tests failed. Please check the installation.")

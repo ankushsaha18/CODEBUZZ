@@ -26,14 +26,6 @@ oauthlib==0.6.1
 Pillow==10.4.0
 PyPDF2==1.25.1
 
-# Face detection for proctoring (optional - will be installed if compatible)
-# Note: These packages are optional and only needed for proctoring functionality
-# If deployment fails due to these packages, they can be removed
-# mediapipe>=0.8.11
-# opencv-python>=4.5.5.64
-# opencv-contrib-python>=4.5.5.64
-# numpy>=1.21.6
-
 # Code highlighting and templating
 Pygments==2.7.4
 Jinja2==2.11.3

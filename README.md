@@ -75,13 +75,19 @@ The build process will automatically:
 - Collect static files
 - Run database migrations
 
+## Proctoring Functionality
+
+The application includes proctoring functionality that uses computer vision libraries (MediaPipe and OpenCV) for face detection. These libraries are optional and only needed if you want to use the proctoring features.
+
+If these libraries cannot be installed during deployment, the proctoring functionality will be automatically disabled, but the rest of the application will work normally.
+
 ## Troubleshooting
 
 ### Common Deployment Issues
 
 1. **Package Installation Errors**: 
    - If you encounter issues with package installation, ensure you're using Python 3.9
-   - The requirements.txt has been updated with compatible package versions
+   - The requirements.txt has been updated to make computer vision libraries optional
 
 2. **Static Files Issues**:
    - Make sure `python manage.py collectstatic` has been run
@@ -97,12 +103,13 @@ The build process will automatically:
 
 5. **Computer Vision Library Issues**:
    - The proctoring feature uses MediaPipe and OpenCV for face detection
-   - If you encounter import errors, verify the packages are correctly installed
+   - These libraries are optional and the application will work without them
+   - If you want to enable proctoring, you may need to manually install these libraries
    - You can test the installation with: `python test_cv.py`
 
 ### Python Version Compatibility
 
-This project is configured to use Python 3.9.16 to ensure compatibility with all required packages, particularly the computer vision libraries used for proctoring.
+This project is configured to use Python 3.9 to ensure compatibility with Render's deployment environment.
 
 ## Testing Computer Vision Libraries
 
@@ -112,7 +119,7 @@ To verify that the computer vision libraries (MediaPipe, OpenCV) are correctly i
 python test_cv.py
 ```
 
-This script will test the imports and basic functionality of the required libraries.
+This script will test the imports and basic functionality of the required libraries. Note that these libraries are optional, and the application will work normally even if they are not available.
 
 ## Contributing
 
