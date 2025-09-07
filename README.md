@@ -75,24 +75,44 @@ The build process will automatically:
 - Collect static files
 - Run database migrations
 
-## Configuration
-
-### HackerEarth API
-
-To use the code execution feature, you need a HackerEarth API key:
-1. Sign up at https://www.hackerearth.com/
-2. Get your API key from the dashboard
-3. Set it as the `HE_CLIENT_SECRET` environment variable
-
-### Database
-
-The application uses SQLite by default for development. For production deployment on Render, it will use PostgreSQL if a `DATABASE_URL` environment variable is provided.
-
 ## Troubleshooting
 
-- If you encounter issues with static files, ensure `python manage.py collectstatic` has been run
-- For database issues, make sure you've run `python manage.py migrate`
-- Check Render logs for deployment errors
+### Common Deployment Issues
+
+1. **Package Installation Errors**: 
+   - If you encounter issues with package installation, ensure you're using Python 3.9
+   - The requirements.txt has been updated with compatible package versions
+
+2. **Static Files Issues**:
+   - Make sure `python manage.py collectstatic` has been run
+   - Check that the STATIC_ROOT and STATIC_URL settings are correct in settings.py
+
+3. **Database Migration Issues**:
+   - Run `python manage.py migrate` to ensure all database migrations are applied
+   - For PostgreSQL, ensure the DATABASE_URL environment variable is set correctly
+
+4. **HackerEarth API Issues**:
+   - Verify that the HE_CLIENT_SECRET environment variable is set
+   - Check that your HackerEarth API key is valid and has not expired
+
+5. **Computer Vision Library Issues**:
+   - The proctoring feature uses MediaPipe and OpenCV for face detection
+   - If you encounter import errors, verify the packages are correctly installed
+   - You can test the installation with: `python test_cv.py`
+
+### Python Version Compatibility
+
+This project is configured to use Python 3.9.16 to ensure compatibility with all required packages, particularly the computer vision libraries used for proctoring.
+
+## Testing Computer Vision Libraries
+
+To verify that the computer vision libraries (MediaPipe, OpenCV) are correctly installed and functional:
+
+```bash
+python test_cv.py
+```
+
+This script will test the imports and basic functionality of the required libraries.
 
 ## Contributing
 

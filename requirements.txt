@@ -26,11 +26,11 @@ oauthlib==0.6.1
 Pillow==10.4.0
 PyPDF2==1.25.1
 
-# Face detection for proctoring
-mediapipe==0.10.21
-opencv-python==4.11.0.86
-opencv-contrib-python==4.11.0.86
-numpy==1.26.4
+# Face detection for proctoring (using compatible versions)
+mediapipe==0.8.11
+opencv-python==4.5.5.64
+opencv-contrib-python==4.5.5.64
+numpy==1.21.6
 
 # Code highlighting and templating
 Pygments==2.7.4
@@ -64,4 +64,3 @@ dj-database-url==0.5.0
 cffi==1.17.1
 pycparser==2.22
 setuptools==80.9.0
-gunicorn
