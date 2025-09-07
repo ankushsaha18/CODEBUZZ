@@ -3,6 +3,10 @@ An AI-powered competitive coding platform with real-time proctoring, premium com
 
 ---
 
+## 🧪 Testing credentials
+1. Username = test2, Password = test1234
+2. Username = test3, Password = test1234
+
 ## 📌 Problem Statement  
 Most existing online coding platforms face three major challenges:  
 1. **Lack of fairness** – Cheating during contests reduces credibility.  
