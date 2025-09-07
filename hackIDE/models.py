@@ -133,10 +133,9 @@ class ContestProblem(models.Model):
                     return 'int' if t in ['int','integer','number'] else 'string'
                 args = ', '.join([f"{ctype(p.get('type'))} {p.get('name','arg')}" for p in params])
                 rtype = ctype(return_type)
-                ret_val = '0' if rtype == 'int' else '""'
                 return (
-                    "#include <bits/stdc++.h>\nusing namespace std;\n\n"
-                    f"{rtype} {self.signature_name}({args}) {{\n    // TODO: implement\n    return {ret_val};\n}}\n\n"
+                    "#include <bits/stdc++.h>\nusing namespace std;\n\n" 
+                    f"{rtype} {self.signature_name}({args}) {{\n    // TODO: implement\n    return { '0' if rtype=='int' else '""' };\n}}\n\n" 
                     "int main(){\n    ios::sync_with_stdio(false); cin.tie(nullptr);\n    // You can test your function here\n    return 0;\n}\n"
                 )
             if lname == 'C':
