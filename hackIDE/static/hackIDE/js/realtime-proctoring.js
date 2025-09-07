@@ -269,13 +269,17 @@ class RealtimeProctoring {
     async start() {
         if (this.isActive) {
             console.log('Proctoring already active');
-            return;
+            return true;
         }
         
         console.log('Starting real-time proctoring...');
         this.updateStatus('warning', 'Proctoring: Starting...');
         
         try {
+            // Log browser capabilities
+            console.log('Browser media devices support:', !!navigator.mediaDevices);
+            console.log('Browser media devices getUserMedia support:', !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+            
             // First priority: Use GlobalCameraManager if available
             if (window.contestCameraManager && window.contestCameraManager.isStreamActive()) {
                 console.log('Using GlobalCameraManager stream for proctoring...');
@@ -352,7 +356,7 @@ class RealtimeProctoring {
                                 streamFound = true;
                                 break;
                             }
-                        }
+                }
                     }
                 }
                 
@@ -378,7 +382,7 @@ class RealtimeProctoring {
                 } else {
                     // Check if getUserMedia is supported
                     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        throw new Error('Camera access is not supported in this browser');
+                        throw new Error('Camera access is not supported in this browser. Please use Chrome, Firefox, or Edge.');
                     }
                     
                     console.log('Requesting new camera access...');
@@ -419,7 +423,7 @@ class RealtimeProctoring {
                             };
                         }),
                         new Promise((_, reject) => {
-                            setTimeout(() => reject(new Error('Video load timeout')), 10000);
+                            setTimeout(() => reject(new Error('Video load timeout - camera may be blocked or in use')), 10000);
                         })
                     ]);
                     
@@ -433,6 +437,22 @@ class RealtimeProctoring {
                 }
             }
             
+            // Validate that we have a working stream
+            if (!this.stream || !this.stream.active) {
+                throw new Error('Camera stream is not active. Please check camera permissions and try again.');
+            }
+            
+            // Log stream details for debugging
+            console.log('Stream details:', {
+                active: this.stream.active,
+                id: this.stream.id,
+                tracks: this.stream.getTracks().map(track => ({
+                    kind: track.kind,
+                    readyState: track.readyState,
+                    enabled: track.enabled
+                }))
+            });
+            
             // Start proctoring on server
             console.log('Starting server-side proctoring...');
             const response = await fetch(`/contests/${this.contestId}/proctoring/start/`, {
@@ -444,7 +464,8 @@ class RealtimeProctoring {
             });
             
             if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
+                const errorText = await response.text();
+                throw new Error(`Server error: ${response.status} - ${errorText}`);
             }
             
             const data = await response.json();
@@ -462,6 +483,8 @@ class RealtimeProctoring {
                 if (this.onStatusUpdate) {
                     this.onStatusUpdate('started');
                 }
+                
+                return true;
             } else {
                 throw new Error(data.message || 'Failed to start proctoring on server');
             }
@@ -478,17 +501,19 @@ class RealtimeProctoring {
                 errorMessage += 'No camera found. Please connect a camera and refresh the page.';
             } else if (error.name === 'NotReadableError') {
                 errorMessage += 'Camera is already in use by another application.';
+            } else if (error.message.includes('not supported')) {
+                errorMessage += 'Your browser does not support camera access. Please use Chrome, Firefox, or Edge.';
+            } else if (error.message.includes('timeout')) {
+                errorMessage += 'Camera initialization timed out. Please check camera permissions and try again.';
             } else {
                 errorMessage += error.message || 'Unknown error occurred.';
             }
             
             this.showTemporaryMessage(errorMessage, 'error');
             
-            // Don't throw the error, just log it
+            // Don't throw the error, just log it and return false to indicate failure
             return false;
         }
-        
-        return true;
     }
     
     stop() {

@@ -141,5 +141,20 @@ The build process will automatically:
 
 ---
 
+## 🎥 Camera Proctoring Troubleshooting
+
+If you're experiencing issues with the camera proctoring system, please refer to our detailed troubleshooting guide:
+
+- [Proctoring Troubleshooting Guide](PROCTORING_TROUBLESHOOTING.md) - Comprehensive guide for diagnosing and resolving proctoring issues
+
+Common issues and solutions:
+1. **Camera Access Denied** - Check browser permissions and ensure no other applications are using the camera
+2. **Proctoring Not Starting** - Verify contest settings and check browser console for errors
+3. **Face Detection Issues** - Ensure proper lighting and camera positioning
+
+You can also test your camera independently by navigating to `/camera-test/` in your browser.
+
+---
+
 ## 📜 License  
 This project is licensed under the MIT License.
