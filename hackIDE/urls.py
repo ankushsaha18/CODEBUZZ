@@ -58,7 +58,4 @@ urlpatterns = [
   
   # ex: /code=ajSkHb/ - This must come LAST to avoid catching other URLs
   re_path(r'(?P<code_id>\w{0,50})/$', views.savedCodeView, name='saved-code'),
-  
-  # Test proctoring
-  path('test-proctoring/', views.test_proctoring, name='test_proctoring'),
 ]

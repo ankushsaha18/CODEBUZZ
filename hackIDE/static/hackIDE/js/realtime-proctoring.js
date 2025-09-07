@@ -3,18 +3,8 @@
  * Continuous camera monitoring with face detection for contest integrity
  */
 
-// Check if required browser APIs are available
-if (typeof navigator === 'undefined' || typeof window === 'undefined') {
-    console.error('Required browser APIs not available');
-}
-
 class RealtimeProctoring {
     constructor(contestId, csrfToken) {
-        // Validate inputs
-        if (!contestId || !csrfToken) {
-            throw new Error('Invalid parameters: contestId and csrfToken are required');
-        }
-        
         this.contestId = contestId;
         this.csrfToken = csrfToken;
         this.isActive = false;
@@ -91,11 +81,49 @@ class RealtimeProctoring {
                 <span id="proctoring-text">Proctoring: Inactive</span>
             </div>
         `;
-        // Fixed CSS with proper values
-        indicator.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000; background: rgba(0, 0, 0, 0.8); color: white; padding: 10px 15px; border-radius: 20px; font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;';
+        indicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        `;
         
         const style = document.createElement('style');
-        style.textContent = '.proctoring-indicator { display: flex; align-items: center; } .proctoring-indicator > * { margin-right: 8px; } .proctoring-indicator > *:last-child { margin-right: 0; } .indicator-dot { width: 8px; height: 8px; border-radius: 50%; background: #dc3545; animation: pulse 2s infinite; } .indicator-dot.active { background: #28a745; } .indicator-dot.warning { background: #ffc107; } .indicator-dot.terminated { background: #dc3545; animation: none; } @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }';
+        style.textContent = `
+            .proctoring-indicator {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .indicator-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #dc3545;
+                animation: pulse 2s infinite;
+            }
+            .indicator-dot.active {
+                background: #28a745;
+            }
+            .indicator-dot.warning {
+                background: #ffc107;
+            }
+            .indicator-dot.terminated {
+                background: #dc3545;
+                animation: none;
+            }
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
+            }
+        `;
         document.head.appendChild(style);
         document.body.appendChild(indicator);
         
@@ -187,7 +215,7 @@ class RealtimeProctoring {
                 max-height: 200px;
                 overflow-y: auto;
             ">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
                     <strong>🔧 Proctoring Debug</strong>
                     <button onclick="this.parentElement.parentElement.parentElement.style.display='none'" 
                             style="background: none; border: none; color: white; cursor: pointer; margin-left: 10px;">✕</button>
@@ -241,26 +269,13 @@ class RealtimeProctoring {
     async start() {
         if (this.isActive) {
             console.log('Proctoring already active');
-            return true;
+            return;
         }
         
         console.log('Starting real-time proctoring...');
         this.updateStatus('warning', 'Proctoring: Starting...');
         
         try {
-            // Check if required browser APIs are available
-            if (!navigator.mediaDevices) {
-                throw new Error('Media devices API not available in this browser. Please use Chrome, Firefox, or Edge.');
-            }
-            
-            if (!navigator.mediaDevices.getUserMedia) {
-                throw new Error('Camera access not supported in this browser. Please use Chrome, Firefox, or Edge.');
-            }
-            
-            // Log browser capabilities
-            console.log('Browser media devices support:', !!navigator.mediaDevices);
-            console.log('Browser media devices getUserMedia support:', !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
-            
             // First priority: Use GlobalCameraManager if available
             if (window.contestCameraManager && window.contestCameraManager.isStreamActive()) {
                 console.log('Using GlobalCameraManager stream for proctoring...');
@@ -337,7 +352,7 @@ class RealtimeProctoring {
                                 streamFound = true;
                                 break;
                             }
-                }
+                        }
                     }
                 }
                 
@@ -363,7 +378,7 @@ class RealtimeProctoring {
                 } else {
                     // Check if getUserMedia is supported
                     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        throw new Error('Camera access is not supported in this browser. Please use Chrome, Firefox, or Edge.');
+                        throw new Error('Camera access is not supported in this browser');
                     }
                     
                     console.log('Requesting new camera access...');
@@ -404,7 +419,7 @@ class RealtimeProctoring {
                             };
                         }),
                         new Promise((_, reject) => {
-                            setTimeout(() => reject(new Error('Video load timeout - camera may be blocked or in use')), 10000);
+                            setTimeout(() => reject(new Error('Video load timeout')), 10000);
                         })
                     ]);
                     
@@ -418,22 +433,6 @@ class RealtimeProctoring {
                 }
             }
             
-            // Validate that we have a working stream
-            if (!this.stream || !this.stream.active) {
-                throw new Error('Camera stream is not active. Please check camera permissions and try again.');
-            }
-            
-            // Log stream details for debugging
-            console.log('Stream details:', {
-                active: this.stream.active,
-                id: this.stream.id,
-                tracks: this.stream.getTracks().map(track => ({
-                    kind: track.kind,
-                    readyState: track.readyState,
-                    enabled: track.enabled
-                }))
-            });
-            
             // Start proctoring on server
             console.log('Starting server-side proctoring...');
             const response = await fetch(`/contests/${this.contestId}/proctoring/start/`, {
@@ -445,8 +444,7 @@ class RealtimeProctoring {
             });
             
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Server error: ${response.status} - ${errorText}`);
+                throw new Error(`Server error: ${response.status}`);
             }
             
             const data = await response.json();
@@ -464,8 +462,6 @@ class RealtimeProctoring {
                 if (this.onStatusUpdate) {
                     this.onStatusUpdate('started');
                 }
-                
-                return true;
             } else {
                 throw new Error(data.message || 'Failed to start proctoring on server');
             }
@@ -476,28 +472,23 @@ class RealtimeProctoring {
             
             let errorMessage = 'Failed to start camera proctoring. ';
             
-            // Enhanced error handling with more specific messages
-            if (error.name === 'NotAllowedError' || (error.message && error.message.includes('denied'))) {
+            if (error.name === 'NotAllowedError') {
                 errorMessage += 'Camera access was denied. Please allow camera access and refresh the page.';
-            } else if (error.name === 'NotFoundError' || (error.message && error.message.includes('found'))) {
+            } else if (error.name === 'NotFoundError') {
                 errorMessage += 'No camera found. Please connect a camera and refresh the page.';
-            } else if (error.name === 'NotReadableError' || (error.message && error.message.includes('use'))) {
+            } else if (error.name === 'NotReadableError') {
                 errorMessage += 'Camera is already in use by another application.';
-            } else if (error.message && error.message.includes('not supported')) {
-                errorMessage += 'Your browser does not support camera access. Please use Chrome, Firefox, or Edge.';
-            } else if (error.message && error.message.includes('timeout')) {
-                errorMessage += 'Camera initialization timed out. Please check camera permissions and try again.';
-            } else if (error.message) {
-                errorMessage += error.message;
             } else {
-                errorMessage += 'Unknown error occurred. Please check browser compatibility and camera permissions.';
+                errorMessage += error.message || 'Unknown error occurred.';
             }
             
             this.showTemporaryMessage(errorMessage, 'error');
             
-            // Don't throw the error, just log it and return false to indicate failure
+            // Don't throw the error, just log it
             return false;
         }
+        
+        return true;
     }
     
     stop() {

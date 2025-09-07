@@ -3,11 +3,6 @@
  * Ensures camera remains active throughout entire contest session
  */
 
-// Check if required browser APIs are available
-if (typeof navigator === 'undefined' || typeof window === 'undefined') {
-    console.error('Required browser APIs not available');
-}
-
 class GlobalCameraManager {
     constructor() {
         this.stream = null;
@@ -65,12 +60,7 @@ class GlobalCameraManager {
         }
         
         try {
-            // Check if getUserMedia is supported
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                throw new Error('Camera access is not supported in this browser. Please use Chrome, Firefox, or Edge.');
-            }
-            
-            // Request new camera access with more detailed constraints
+            // Request new camera access
             console.log('GlobalCameraManager: Requesting new camera access');
             this.stream = await navigator.mediaDevices.getUserMedia({
                 video: { 
@@ -89,27 +79,6 @@ class GlobalCameraManager {
             
         } catch (error) {
             console.error('GlobalCameraManager: Failed to start camera:', error);
-            
-            // Provide more specific error messages
-            let errorMessage = 'Failed to access camera. ';
-            
-            if (error.name === 'NotAllowedError' || (error.message && error.message.includes('denied'))) {
-                errorMessage += 'Please allow camera access in your browser settings and refresh the page.';
-            } else if (error.name === 'NotFoundError' || (error.message && error.message.includes('found'))) {
-                errorMessage += 'No camera detected. Please connect a camera and try again.';
-            } else if (error.name === 'NotReadableError' || (error.message && error.message.includes('use'))) {
-                errorMessage += 'Camera is already in use by another application.';
-            } else if (error.message && error.message.includes('not supported')) {
-                errorMessage += 'Your browser does not support camera access. Please use Chrome, Firefox, or Edge.';
-            } else if (error.message) {
-                errorMessage += error.message;
-            } else {
-                errorMessage += 'Unknown error occurred.';
-            }
-            
-            // Show error to user
-            this.showErrorMessage(errorMessage);
-            
             this.isActive = false;
             this.saveState();
             throw error;
@@ -183,8 +152,16 @@ class GlobalCameraManager {
         video.autoplay = true;
         video.playsInline = true;
         video.muted = true;
-        // Fixed CSS with proper negative values
-        video.style.cssText = 'position: fixed !important; top: -9999px !important; left: -9999px !important; width: 1px !important; height: 1px !important; z-index: -9999 !important; opacity: 0 !important; pointer-events: none !important;';
+        video.style.cssText = `
+            position: fixed !important;
+            top: -9999px !important;
+            left: -9999px !important;
+            width: 1px !important;
+            height: 1px !important;
+            z-index: -9999 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        `;
         video.setAttribute('data-global-camera', 'true');
         video.setAttribute('data-proctoring-active', 'true');
         
@@ -413,55 +390,6 @@ class GlobalCameraManager {
             contestId: this.contestId,
             videoElements: this.videoElements.size
         };
-    }
-    
-    showErrorMessage(message) {
-        // Create or update error message element
-        let errorElement = document.getElementById('global-camera-error');
-        if (!errorElement) {
-            errorElement = document.createElement('div');
-            errorElement.id = 'global-camera-error';
-            errorElement.style.cssText = `
-                position: fixed;
-                top: 60px;
-                right: 20px;
-                z-index: 10001;
-                background: #dc3545;
-                color: white;
-                padding: 15px;
-                border-radius: 5px;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                font-size: 14px;
-                max-width: 300px;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            `;
-            document.body.appendChild(errorElement);
-        }
-        
-        errorElement.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
-                    <strong>Camera Error:</strong>
-                    <p style="margin: 5px 0 0 0; font-size: 13px;">${message}</p>
-                </div>
-                <button onclick="this.parentElement.parentElement.remove()" style="
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 18px;
-                    cursor: pointer;
-                    padding: 0;
-                    margin-left: 10px;
-                ">&times;</button>
-            </div>
-        `;
-        
-        // Auto-hide after 10 seconds
-        setTimeout(() => {
-            if (errorElement && errorElement.parentElement) {
-                errorElement.remove();
-            }
-        }, 10000);
     }
 }
 
