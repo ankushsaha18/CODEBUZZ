@@ -43,10 +43,6 @@ With CodeBuzz, we bridge the gap between **learning, assessment, and employabili
 - ✅ Premium subscriptions & user management  
 - ✅ Code execution using HackerEarth API  
 
----
-
-## 📸 Screenshots  
-(Add screenshots of your platform here)  
 
 ---
 
@@ -61,13 +57,6 @@ With CodeBuzz, we bridge the gap between **learning, assessment, and employabili
 ## 🏆 Hackathon Context  
 This project was built for **[Hackathon Name]** under the **EdTech / AI / Skill Development theme**, aiming to create a **trusted and intelligent coding platform** that prepares learners for the real world.  
 
----
-
-## 👨‍💻 Team CodeBuzz  
-- [Your Name] – Full Stack Developer  
-- [Teammate 2] – Backend / AI Engineer  
-- [Teammate 3] – UI/UX Designer  
-- [Teammate 4] – Project Manager  
 
 ---
 
