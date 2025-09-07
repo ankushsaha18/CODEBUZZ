@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-# from mongoengine import connect
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,14 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m'
+SECRET_KEY = os.environ.get('SECRET_KEY', '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Set to True for development
-# DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
-# DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # For Render deployment, you might want to restrict this to your domain
 
 # To allow the cross site request over the app
 CORS_ORIGIN_ALLOW_ALL = True
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files on Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     # Use CORS middleware compatible with Django 2.2
     'corsheaders.middleware.CorsMiddleware',
@@ -90,10 +89,9 @@ DATABASES = {
     }
 }
 
-# use your db creds here
-# TODO: Update with new host details before making live on heroku
-# Commented out MongoDB connection to prevent connection errors
-# connect(host='mongodb://JSSaini08:hackidecodes@ds011705.mlab.com:11705/codes')
+# For Render deployment, use PostgreSQL if available
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -131,18 +129,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(BASE_DIR), 'hackIDE/static'),
-)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'hackIDE/static'),
+]
 
 # Media (user uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
