@@ -3,6 +3,11 @@
  * Ensures camera remains active throughout entire contest session
  */
 
+// Check if required browser APIs are available
+if (typeof navigator === 'undefined' || typeof window === 'undefined') {
+    console.error('Required browser APIs not available');
+}
+
 class GlobalCameraManager {
     constructor() {
         this.stream = null;

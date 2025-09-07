@@ -381,6 +381,13 @@ function initializeProctoring() {
     
     console.log('Creating RealtimeProctoring instance...');
     try {
+        // Check if required browser APIs are available
+        if (typeof window.RealtimeProctoring === 'undefined') {
+            console.error('RealtimeProctoring class not found');
+            showErrorMessage('Proctoring system not loaded properly. Please check browser compatibility.');
+            return Promise.resolve(false);
+        }
+        
         proctoring = new RealtimeProctoring({{ contest.id }}, csrfToken);
     } catch (error) {
         console.error('Failed to create RealtimeProctoring instance:', error);
@@ -389,45 +396,68 @@ function initializeProctoring() {
     }
     
     // Set up event handlers
-    proctoring.setOnWarning((data) => {
-        console.log('Proctoring warning:', data);
-        // Warning modal is handled automatically by the proctoring system
-    });
-    
-    proctoring.setOnTermination((data) => {
-        console.log('Contest terminated:', data);
-        // Disable all form interactions
-        document.getElementById('submit-solution').disabled = true;
-        document.getElementById('test-code').disabled = true;
-        editor.setReadOnly(true);
-    });
-    
-    proctoring.setOnStatusUpdate((status) => {
-        console.log('Proctoring status updated:', status);
-        // Hide manual start button if proctoring starts successfully
-        if (status === 'started') {
-            const manualBtn = document.getElementById('manual-start-proctoring');
-            if (manualBtn) {
-                manualBtn.style.display = 'none';
+    if (proctoring) {
+        proctoring.setOnWarning((data) => {
+            console.log('Proctoring warning:', data);
+            // Warning modal is handled automatically by the proctoring system
+        });
+        
+        proctoring.setOnTermination((data) => {
+            console.log('Contest terminated:', data);
+            // Disable all form interactions
+            document.getElementById('submit-solution').disabled = true;
+            document.getElementById('test-code').disabled = true;
+            editor.setReadOnly(true);
+        });
+        
+        proctoring.setOnStatusUpdate((status) => {
+            console.log('Proctoring status updated:', status);
+            // Hide manual start button if proctoring starts successfully
+            if (status === 'started') {
+                const manualBtn = document.getElementById('manual-start-proctoring');
+                if (manualBtn) {
+                    manualBtn.style.display = 'none';
+                }
             }
-        }
-    });
+        });
+    }
     
     // Start proctoring and return promise
     console.log('Starting proctoring...');
-    return proctoring.start().then(success => {
-        if (success !== false) {
-            console.log('Proctoring started successfully');
-            // Hide manual start button if proctoring starts successfully
-            const manualBtn = document.getElementById('manual-start-proctoring');
-            if (manualBtn) {
-                manualBtn.style.display = 'none';
+    if (proctoring) {
+        return proctoring.start().then(success => {
+            if (success !== false) {
+                console.log('Proctoring started successfully');
+                // Hide manual start button if proctoring starts successfully
+                const manualBtn = document.getElementById('manual-start-proctoring');
+                if (manualBtn) {
+                    manualBtn.style.display = 'none';
+                }
+                proctoringInitialized = true;
+                return true;
+            } else {
+                console.log('Automatic proctoring start failed, showing manual start button');
+                // Show manual start button if automatic start fails
+                const manualBtn = document.getElementById('manual-start-proctoring');
+                if (manualBtn) {
+                    manualBtn.style.display = 'inline-block';
+                    manualBtn.onclick = function() {
+                        console.log('Manual proctoring start requested');
+                        return proctoring.start().then(result => {
+                            if (result) {
+                                manualBtn.style.display = 'none';
+                                proctoringInitialized = true;
+                            }
+                            return result;
+                        });
+                    };
+                }
+                return false;
             }
-            proctoringInitialized = true;
-            return true;
-        } else {
-            console.log('Automatic proctoring start failed, showing manual start button');
-            // Show manual start button if automatic start fails
+        }).catch(error => {
+            console.error('Failed to start proctoring:', error);
+            showErrorMessage('Failed to start proctoring: ' + (error.message || 'Unknown error'));
+            // Show manual start button
             const manualBtn = document.getElementById('manual-start-proctoring');
             if (manualBtn) {
                 manualBtn.style.display = 'inline-block';
@@ -443,27 +473,12 @@ function initializeProctoring() {
                 };
             }
             return false;
-        }
-    }).catch(error => {
-        console.error('Failed to start proctoring:', error);
-        showErrorMessage('Failed to start proctoring: ' + (error.message || 'Unknown error'));
-        // Show manual start button
-        const manualBtn = document.getElementById('manual-start-proctoring');
-        if (manualBtn) {
-            manualBtn.style.display = 'inline-block';
-            manualBtn.onclick = function() {
-                console.log('Manual proctoring start requested');
-                return proctoring.start().then(result => {
-                    if (result) {
-                        manualBtn.style.display = 'none';
-                        proctoringInitialized = true;
-                    }
-                    return result;
-                });
-            };
-        }
-        return false;
-    });
+        });
+    } else {
+        console.error('Proctoring instance not available');
+        showErrorMessage('Proctoring system failed to initialize. Please check browser compatibility.');
+        return Promise.resolve(false);
+    }
 }
 
 // Helper function to show error messages

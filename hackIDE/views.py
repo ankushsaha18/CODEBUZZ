@@ -2424,6 +2424,12 @@ def realtime_face_monitor(request, contest_id):
 
 
 @login_required
+def test_proctoring(request):
+    """Test page for proctoring system"""
+    return render(request, 'hackIDE/test_proctoring.html')
+
+
+@login_required
 def proctoring_status(request, contest_id):
     """Get current proctoring status"""
     contest = get_object_or_404(Contest, id=contest_id)

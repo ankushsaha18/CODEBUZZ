@@ -3,8 +3,18 @@
  * Continuous camera monitoring with face detection for contest integrity
  */
 
+// Check if required browser APIs are available
+if (typeof navigator === 'undefined' || typeof window === 'undefined') {
+    console.error('Required browser APIs not available');
+}
+
 class RealtimeProctoring {
     constructor(contestId, csrfToken) {
+        // Validate inputs
+        if (!contestId || !csrfToken) {
+            throw new Error('Invalid parameters: contestId and csrfToken are required');
+        }
+        
         this.contestId = contestId;
         this.csrfToken = csrfToken;
         this.isActive = false;
@@ -238,6 +248,15 @@ class RealtimeProctoring {
         this.updateStatus('warning', 'Proctoring: Starting...');
         
         try {
+            // Check if required browser APIs are available
+            if (!navigator.mediaDevices) {
+                throw new Error('Media devices API not available in this browser. Please use Chrome, Firefox, or Edge.');
+            }
+            
+            if (!navigator.mediaDevices.getUserMedia) {
+                throw new Error('Camera access not supported in this browser. Please use Chrome, Firefox, or Edge.');
+            }
+            
             // Log browser capabilities
             console.log('Browser media devices support:', !!navigator.mediaDevices);
             console.log('Browser media devices getUserMedia support:', !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
