@@ -50,7 +50,7 @@ PyYAML==6.0.2
 six==1.17.0
 
 # Development and deployment
-gunicorn==19.5.0
+gunicorn==22.0.0
 wheel==0.24.0
 dj-database-url==0.5.0
 

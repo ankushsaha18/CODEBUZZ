@@ -88,6 +88,7 @@ If these libraries cannot be installed during deployment, the proctoring functio
 1. **Package Installation Errors**: 
    - If you encounter issues with package installation, ensure you're using Python 3.9
    - The requirements.txt has been updated to make computer vision libraries optional
+   - Gunicorn has been updated to version 22.0.0 for better compatibility with newer Python versions
 
 2. **Static Files Issues**:
    - Make sure `python manage.py collectstatic` has been run
