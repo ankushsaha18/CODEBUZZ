@@ -1,22 +1,84 @@
-# CODEBUZZ (hackIDE)
+# CodeBuzz 🚀  
+An AI-powered competitive coding platform with real-time proctoring, premium company-wise problem sets, and AI-driven solution guidance.  
 
-An online code editor, compiler, and interpreter built using Django and powered by the HackerEarth API.
+---
 
-## Features
+## 📌 Problem Statement  
+Most existing online coding platforms face three major challenges:  
+1. **Lack of fairness** – Cheating during contests reduces credibility.  
+2. **Unstructured preparation** – Learners cannot easily find company-wise problems for focused interview practice.  
+3. **Limited personalized guidance** – Learners often struggle without intelligent support while solving problems.  
 
-- Online code editing with syntax highlighting
-- Code execution using HackerEarth API
-- Save code to the cloud
-- Download code as a zipped file
-- User profiles to store personal code and settings (in progress)
+There is a need for a **fair, AI-powered, and career-focused coding ecosystem**.  
 
-## Prerequisites
+---
 
+## 💡 Our Solution – CodeBuzz  
+CodeBuzz is built to solve these problems through:  
+- 🔒 **Real-time Camera Proctoring** → Ensures integrity and fairness during contests.  
+- 🏆 **Regular Coding Contests** → Keeps learners engaged with real-world challenges.  
+- 🎯 **Company-wise Tagged Problems** → Helps users prepare specifically for interviews at top tech companies.  
+- 🤖 **AI-Powered Solution Generator** → Provides smart, step-by-step guidance for premium problems.  
+- 💎 **Premium Subscriptions** → Unlock access to exclusive problems and AI features.  
+
+With CodeBuzz, we bridge the gap between **learning, assessment, and employability**.  
+
+---
+
+## ⚙️ Tech Stack  
+- **Frontend:** HTML, CSS, JavaScript  
+- **Backend:** Django  
+- **Database:** SQLite (development), PostgreSQL (production)  
+- **AI Integration:** Google Gemini API  
+- **Authentication:** Django built-in authentication  
+- **Real-time Proctoring:** Camera tracking using MediaPipe / OpenCV  
+
+---
+
+## 🚀 Features  
+- ✅ Online coding environment with syntax highlighting  
+- ✅ Fair contests with real-time anti-cheating proctoring  
+- ✅ AI-generated solutions for premium users  
+- ✅ Company-wise tagging system for interview preparation  
+- ✅ Premium subscriptions & user management  
+- ✅ Code execution using HackerEarth API  
+
+---
+
+## 📸 Screenshots  
+(Add screenshots of your platform here)  
+
+---
+
+## 🔮 Future Enhancements  
+- 📊 Personalized performance analytics & leaderboards  
+- 🧑‍🤝‍🧑 Team coding challenges  
+- 🌍 Support for multiple languages (C++, Java, Python, etc.)  
+- 🎙️ Voice + AI mentor for real-time code debugging assistance  
+
+---
+
+## 🏆 Hackathon Context  
+This project was built for **[Hackathon Name]** under the **EdTech / AI / Skill Development theme**, aiming to create a **trusted and intelligent coding platform** that prepares learners for the real world.  
+
+---
+
+## 👨‍💻 Team CodeBuzz  
+- [Your Name] – Full Stack Developer  
+- [Teammate 2] – Backend / AI Engineer  
+- [Teammate 3] – UI/UX Designer  
+- [Teammate 4] – Project Manager  
+
+---
+
+## 🛠️ Setup Instructions
+
+### Prerequisites
 - Python 3.9+
 - pip
 - A HackerEarth API key
 
-## Setup Instructions
+### Installation Steps
 
 1. Clone the repository:
    ```bash
@@ -49,7 +111,9 @@ An online code editor, compiler, and interpreter built using Django and powered 
    python manage.py runserver
    ```
 
-## Deployment to Render
+---
+
+## ☁️ Deployment
 
 This application is configured for deployment to Render using the provided `render.yaml` configuration file.
 
@@ -75,58 +139,7 @@ The build process will automatically:
 - Collect static files
 - Run database migrations
 
-## Proctoring Functionality
+---
 
-The application includes proctoring functionality that uses computer vision libraries (MediaPipe and OpenCV) for face detection. These libraries are optional and only needed if you want to use the proctoring features.
-
-If these libraries cannot be installed during deployment, the proctoring functionality will be automatically disabled, but the rest of the application will work normally.
-
-## Troubleshooting
-
-### Common Deployment Issues
-
-1. **Package Installation Errors**: 
-   - If you encounter issues with package installation, ensure you're using Python 3.9
-   - The requirements.txt has been updated to make computer vision libraries optional
-   - Gunicorn has been updated to version 22.0.0 for better compatibility with newer Python versions
-   - Whitenoise has been updated to version 6.7.0 for better compatibility with newer Python versions
-
-2. **Static Files Issues**:
-   - Make sure `python manage.py collectstatic` has been run
-   - Check that the STATIC_ROOT and STATIC_URL settings are correct in settings.py
-
-3. **Database Migration Issues**:
-   - Run `python manage.py migrate` to ensure all database migrations are applied
-   - For PostgreSQL, ensure the DATABASE_URL environment variable is set correctly
-
-4. **HackerEarth API Issues**:
-   - Verify that the HE_CLIENT_SECRET environment variable is set
-   - Check that your HackerEarth API key is valid and has not expired
-
-5. **Computer Vision Library Issues**:
-   - The proctoring feature uses MediaPipe and OpenCV for face detection
-   - These libraries are optional and the application will work without them
-   - If you want to enable proctoring, you may need to manually install these libraries
-   - You can test the installation with: `python test_cv.py`
-
-### Python Version Compatibility
-
-This project is configured to use Python 3.9 to ensure compatibility with Render's deployment environment.
-
-## Testing Computer Vision Libraries
-
-To verify that the computer vision libraries (MediaPipe, OpenCV) are correctly installed and functional:
-
-```bash
-python test_cv.py
-```
-
-This script will test the imports and basic functionality of the required libraries. Note that these libraries are optional, and the application will work normally even if they are not available.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
-## License
-
+## 📜 License  
 This project is licensed under the MIT License.
