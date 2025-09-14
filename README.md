@@ -69,10 +69,6 @@ With CodeBuzz, we bridge the gap between **learning, assessment, and employabili
 - 🌍 Support for multiple languages (C++, Java, Python, etc.)  
 - 🎙️ Voice + AI mentor for real-time code debugging assistance  
 
----
-
-## 🏆 Hackathon Context  
-This project was built for **[Hackathon Name]** under the **EdTech / AI / Skill Development theme**, aiming to create a **trusted and intelligent coding platform** that prepares learners for the real world.  
 
 
 ---
