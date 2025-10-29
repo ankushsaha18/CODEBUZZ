@@ -17,7 +17,7 @@ There is a need for a **fair, AI-powered, and career-focused coding ecosystem**.
 
 ---
 
-## 💡 Our Solution – CodeBuzz  
+## 💡 Solution – CodeBuzz  
 CodeBuzz is built to solve these problems through:  
 - 🔒 **Real-time Camera Proctoring** → Ensures integrity and fairness during contests.  
 - 🏆 **Regular Coding Contests** → Keeps learners engaged with real-world challenges.  
